@@ -39,9 +39,10 @@ ci_build_target() {
     pushd ${TFLM_REPO_PATH}
     make -j$(nproc) -f tensorflow/lite/micro/tools/make/Makefile \
                        TARGET=cortex_m_generic TARGET_ARCH=${TARGET_ARCH} CO_PROCESSOR=${TARGET_COPROC} ${TARGET_ARGS} \
-                       OPTIMIZED_KERNEL_DIR=${TARGET_KERNEL} \
+                       OPTIMIZED_KERNEL_DIR=${TARGET_KERNEL} CORE_OPTIMIZATION_LEVEL=-O2 \
+                       KERNEL_OPTIMIZATION_LEVEL=-O2 THIRD_PARTY_KERNEL_OPTIMIZATION_LEVEL=-O2 \
                        TARGET_TOOLCHAIN_ROOT=${TOOLCHAIN_PATH}/bin/ TARGET_TOOLCHAIN_PREFIX=arm-none-eabi- \
-                       BUILD_TYPE=${TARGET_BUILD} CORE_OPTIMIZATION_LEVEL=-O2 MICROLITE_LIB_NAME=libtflm.a microlite
+                       BUILD_TYPE=${TARGET_BUILD} MICROLITE_LIB_NAME=libtflm.a microlite
     popd
     mv ${TFLM_REPO_PATH}/gen/*/lib/libtflm.a libtflm-${TARGET_NAME}-${TARGET_BUILD}.a
 }
