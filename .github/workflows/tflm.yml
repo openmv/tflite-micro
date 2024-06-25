@@ -2,26 +2,25 @@ name: '🔥 Build TFLM'
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
     branches:    
       - 'main'
     paths:
-      - 'src/**'
       - '.github/workflows/*.yml'
       - '.github/workflows/*.json'
       - '!**/README.md'
-      - '!**.rst'
 
   pull_request:
     branches:    
       - 'main'
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
     paths:
-      - 'src/**'
       - '.github/workflows/*.yml'
       - '.github/workflows/*.json'
       - '!**/README.md'
-      - '!**.rst'
 
 jobs:
   build-tflm:
