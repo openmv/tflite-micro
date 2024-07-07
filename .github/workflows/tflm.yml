@@ -51,6 +51,18 @@ jobs:
         repository: tensorflow/tflite-micro
         ref: 8c458fc48ee972ea4fc56ddc08849823b9af7ea8
 
+    - name: '⏳ Checkout Ethos-U'
+      run: |
+        git clone --branch 23.05 --depth 1 \
+            https://review.mlplatform.org/ml/ethos-u/ethos-u-core-driver \
+            tflite-micro/tensorflow/lite/micro/tools/make/downloads/ethos_u_core_driver/
+
+    - name: '🩹 Apply patches'
+      run: |
+        cd tflite-micro/tensorflow/lite/micro/tools/make/downloads/ethos_u_core_driver/
+        git log -1
+        git apply --verbose ${GITHUB_WORKSPACE}/patches/ethosu_driver.patch
+
     - name: '♻ Caching dependencies'
       uses: actions/cache@v4.0.2
       id: cache
