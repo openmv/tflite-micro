@@ -49,7 +49,7 @@ jobs:
         submodules: false
         path: tflite-micro
         repository: tensorflow/tflite-micro
-        ref: 8c458fc48ee972ea4fc56ddc08849823b9af7ea8
+        ref: 0cc2e49fd96eca29761b323a16f41683fe112fc6
 
     - name: '⏳ Checkout Ethos-U'
       run: |
