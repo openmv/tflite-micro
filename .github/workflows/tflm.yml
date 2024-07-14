@@ -53,7 +53,7 @@ jobs:
 
     - name: '⏳ Checkout Ethos-U'
       run: |
-        git clone --branch 23.05 --depth 1 \
+        git clone --branch 24.05 --depth 1 \
             https://review.mlplatform.org/ml/ethos-u/ethos-u-core-driver \
             tflite-micro/tensorflow/lite/micro/tools/make/downloads/ethos_u_core_driver/
 
