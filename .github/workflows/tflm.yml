@@ -24,7 +24,7 @@ on:
 
 jobs:
   build-tflm:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     strategy:
       matrix:
@@ -53,8 +53,7 @@ jobs:
 
     - name: '🩹 Apply patches'
       run: |
-        cd tflite-micro
-        git apply --verbose ${GITHUB_WORKSPACE}/patches/tflite_micro.patch
+        git apply --verbose --directory=tflite-micro ${GITHUB_WORKSPACE}/patches/tflite_micro.patch
 
     - name: '♻ Caching dependencies'
       uses: actions/cache@v4.0.2
@@ -67,9 +66,15 @@ jobs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: source tools/ci.sh && ci_install_arm_gcc
 
+    - name: '🐍 Set up Python'
+      uses: actions/setup-python@v5
+      with:
+        cache: 'pip'
+        python-version: "3.12.4"
+
     - name: '🛠 Install dependencies'
       run: |
-        python -m pip install --upgrade pip numpy==1.24 Pillow==10.3
+        python -m pip install --break-system-packages --upgrade pip -r requirements.txt
 
     - name: '🏗 Build TFLM'
       run: |
