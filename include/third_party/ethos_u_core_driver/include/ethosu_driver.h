@@ -1,6 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright 2019-2023 Arm Limited and/or its affiliates <open-source-office@arm.com>
- *
+ * SPDX-FileCopyrightText: Copyright 2019-2024 Arm Limited and/or its affiliates <open-source-office@arm.com>
  * SPDX-License-Identifier: Apache-2.0
  *
  * Licensed under the Apache License, Version 2.0 (the License); you may
@@ -41,6 +40,12 @@ extern "C" {
 #define ETHOSU_DRIVER_VERSION_MINOR 16 ///< Driver minor version
 #define ETHOSU_DRIVER_VERSION_PATCH 0  ///< Driver patch version
 
+#define ETHOSU_SEMAPHORE_WAIT_FOREVER (UINT64_MAX)
+
+#ifndef ETHOSU_SEMAPHORE_WAIT_INFERENCE
+#define ETHOSU_SEMAPHORE_WAIT_INFERENCE ETHOSU_SEMAPHORE_WAIT_FOREVER
+#endif
+
 /******************************************************************************
  * Types
  ******************************************************************************/
@@ -55,9 +60,17 @@ enum ethosu_job_state
     ETHOSU_JOB_DONE
 };
 
+enum ethosu_job_result
+{
+    ETHOSU_JOB_RESULT_OK = 0,
+    ETHOSU_JOB_RESULT_TIMEOUT,
+    ETHOSU_JOB_RESULT_ERROR
+};
+
 struct ethosu_job
 {
     volatile enum ethosu_job_state state;
+    volatile enum ethosu_job_result result;
     const void *custom_data_ptr;
     int custom_data_size;
     const uint64_t *base_addr;
@@ -75,7 +88,6 @@ struct ethosu_driver
     uint64_t fast_memory;
     size_t fast_memory_size;
     uint32_t power_request_counter;
-    bool status_error;
     bool reserved;
 };
 
@@ -134,12 +146,26 @@ void ethosu_invalidate_dcache(uint32_t *p, size_t bytes);
 void *ethosu_mutex_create(void);
 
 /**
+ * Destroy mutex.
+ *
+ * @param mutex     Pointer to mutex handle
+ */
+void ethosu_mutex_destroy(void *mutex);
+
+/**
  * Minimal sempahore implementation for baremetal applications. See
  * ethosu_driver.c.
  *
  * @return Pointer to semaphore handle
  */
 void *ethosu_semaphore_create(void);
+
+/**
+ * Destroy semaphore.
+ *
+ * @param sem       Pointer to semaphore handle
+ */
+void ethosu_semaphore_destroy(void *sem);
 
 /**
  * Lock mutex.
@@ -161,9 +187,10 @@ int ethosu_mutex_unlock(void *mutex);
  * Take semaphore.
  *
  * @param sem       Pointer to semaphore handle
- * @returns 0 on success, else negative error code
+ * @param timeout   Timeout value (unit impl. defined)
+ * @returns 0 on success else negative error code
  */
-int ethosu_semaphore_take(void *sem);
+int ethosu_semaphore_take(void *sem, uint64_t timeout);
 
 /**
  * Give semaphore.
