@@ -49,7 +49,7 @@ jobs:
         submodules: false
         path: tflite-micro
         repository: tensorflow/tflite-micro
-        ref: 0cc2e49fd96eca29761b323a16f41683fe112fc6
+        ref: 7a0249686f412551634a5058ddd6d2ec3f224203
 
     - name: '🩹 Apply patches'
       run: |
@@ -142,7 +142,7 @@ jobs:
 
     - name: '🔄 Update headers'
       run: |
-        rsync -av --delete --include='*/' --include='LICENSE' --include='*.h' --exclude='*' --delete *-headers/ include
+        rsync -av --delete --include='*/' --include='LICENSE' --include='COPYING' --include='*.h' --exclude='*' --delete *-headers/ include
         rm -fr *-headers
 
     - name: '🔀 Create Pull Request'

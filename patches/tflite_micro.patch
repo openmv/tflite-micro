@@ -1,6 +1,6 @@
 diff --git a/tensorflow/lite/micro/tools/make/ethos_u_core_driver_download.sh b/tensorflow/lite/micro/tools/make/ethos_u_core_driver_download.sh
 new file mode 100755
-index 00000000..c4859466
+index 00000000..e6c96c16
 --- /dev/null
 +++ b/tensorflow/lite/micro/tools/make/ethos_u_core_driver_download.sh
 @@ -0,0 +1,64 @@
@@ -57,10 +57,10 @@ index 00000000..c4859466
 +    exit 1
 +  fi
 +
-+  git clone -c advice.detachedHead=false --depth 1 --branch 24.05 \
-+      "https://review.mlplatform.org/ml/ethos-u/ethos-u-core-driver" \
++  git clone "https://review.mlplatform.org/ml/ethos-u/ethos-u-core-driver" \
 +      ${DOWNLOADED_ETHOS_U_CORE_DRIVER_PATH} >&2
 +  pushd ${DOWNLOADED_ETHOS_U_CORE_DRIVER_PATH} > /dev/null
++  git -c advice.detachedHead=false checkout 9622608a5cc318c0933bcce720b59737d03bfb6f
 +  rm -rf .git
 +  create_git_repo ./
 +  popd > /dev/null
@@ -69,7 +69,7 @@ index 00000000..c4859466
 +
 +echo "SUCCESS"
 diff --git a/tensorflow/lite/micro/tools/make/ext_libs/ethos_u.inc b/tensorflow/lite/micro/tools/make/ext_libs/ethos_u.inc
-index c61aaff3..fba2bbde 100644
+index c61aaff3..fda7d05d 100644
 --- a/tensorflow/lite/micro/tools/make/ext_libs/ethos_u.inc
 +++ b/tensorflow/lite/micro/tools/make/ext_libs/ethos_u.inc
 @@ -30,7 +30,10 @@ endif
@@ -90,8 +90,8 @@ index c61aaff3..fba2bbde 100644
  endif
 -CCFLAGS += ${ETHOSU_FLAGS}
 -CXXFLAGS += ${ETHOSU_FLAGS}
-+CCFLAGS += ${ETHOSU_FLAGS} ${ETHOSU_EXTRA_CFLAGS}
-+CXXFLAGS += ${ETHOSU_FLAGS} ${ETHOSU_EXTRA_CXXFLAGS}
++CCFLAGS += ${ETHOSU_FLAGS} ${ETHOSU_EXTRA_FLAGS}
++CXXFLAGS += ${ETHOSU_FLAGS} ${ETHOSU_EXTRA_FLAGS}
  
  # Convert downloaded person detect int8 model.
  $(GENERATED_SRCS_DIR)tensorflow/lite/micro/models/person_detect_model_data_vela.cc:
