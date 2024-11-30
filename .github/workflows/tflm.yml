@@ -29,6 +29,7 @@ jobs:
     strategy:
       matrix:
         target:
+          - {name: cortex-m85, arch: cortex-m85, kernel: cmsis_nn, coproc: '', args: ''}
           - {name: cortex-m0plus, arch: cortex-m0plus, kernel: cmsis_nn, coproc: '', args: ''}
           - {name: cortex-m4+fp, arch: cortex-m4+fp, kernel: cmsis_nn, coproc: '', args: ''}
           - {name: cortex-m7+fp, arch: cortex-m7+fp, kernel: cmsis_nn, coproc: '', args: ''}
